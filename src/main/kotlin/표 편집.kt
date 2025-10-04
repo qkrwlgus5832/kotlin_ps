@@ -98,6 +98,7 @@ fun main() {
     val solution = `표 편집`.Solution()
     solution.solution(
         8, 2, arrayOf(
-            "D 2","C","U 3","C","D 4","C","U 2","Z","Z","U 1","C"
+            "D 2", "C", "U 3", "C", "D 4", "C", "U 2", "Z", "Z", "U 1", "C"
         )
     )
+}

@@ -1,26 +1,18 @@
 class `기둥과 보 설치` {
     class Solution {
         private fun isPillarFine(x: Int, y: Int, graph: Array<Array<BooleanArray>>): Boolean {
-            if (y == 0 || graph[x][y - 1][0] == true || graph[x][y][1] == true || (x - 1 >=0 && graph[x-1][y][1] == true)) {
+            if (y == 0 || graph[x][y - 1][0] == true || graph[x][y][1] == true || (x - 1 >= 0 && graph[x-1][y][1] == true)) {
                 return true
             }
             return false
         }
 
         private fun isBoFine(x: Int, y: Int, graph: Array<Array<BooleanArray>>, n: Int): Boolean {
-            if (graph[x][y][0] == true) {
+            if (y- 1 >= 0 && graph[x][y - 1][0] == true) {
                 return true
             }
 
-            if (x + 1 <= n && graph[x+1][y][0] == true) {
-                return true
-            }
-
-            if (y - 1 >=0 && graph[x][y - 1][0] == true) {
-                return true
-            }
-
-            if (x + 1 <= n && y -1 >=0 && graph[x+1][y - 1][0] == true) {
+            if (y - 1 >= 0 && x + 1 <= n && graph[x+1][y - 1][0] == true) {
                 return true
             }
 
@@ -65,30 +57,16 @@ class `기둥과 보 설치` {
             return false
         }
 
-        private fun checkIsValidForRemove(graph: Array<Array<BooleanArray>>, x: Int, y: Int, a: Int, n: Int): Boolean {
-            if (a == 0) {
-                return checkFromGraph(graph, x, y - 1, n) &&
-                checkFromGraph(graph, x - 1, y, n) &&
-                checkFromGraph(graph, x + 1, y, n)
-            }
-            else if (a == 1) {
-                return checkFromGraph(graph, x - 1, y, n) &&
-                checkFromGraph(graph, x + 1, y, n)
+        private fun checkIsValid(graph: Array<Array<BooleanArray>>, x: Int, y: Int, a: Int, n: Int): Boolean {
+            for (i in 0 until graph.size) {
+                for (j in 0 until graph[i].size) {
+                    if (!checkFromGraph(graph, i, j, n)) {
+                        return false
+                    }
+                }
             }
 
-            return false
-        }
-
-        private fun checkIsValidForInstall(graph: Array<Array<BooleanArray>>, x: Int, y: Int, a: Int, n: Int): Boolean {
-            return checkFromGraph(graph, x, y, n)
-        }
-
-        private fun removeFromGraph(graph: Array<Array<BooleanArray>>, x: Int, y: Int, a: Int) {
-            graph[x][y][a] = false
-        }
-
-        private fun installFromGraph(graph: Array<Array<BooleanArray>>, x: Int, y: Int, a: Int) {
-            graph[x][y][a] = true
+            return true
         }
 
         fun solution(n: Int, build_frame: Array<IntArray>): Array<IntArray> {
@@ -107,10 +85,9 @@ class `기둥과 보 설치` {
                 val b = build_frame[i][3]
 
                 if (b== 0) {
-                    removeFromGraph(graph, x, y, a)
                     graph[x][y][a] = false
 
-                    val result = checkIsValidForRemove(graph, x, y, a, n)
+                    val result = checkIsValid(graph, x, y, a, n)
 
                     if (!result) {
                         graph[x][y][a] = true
@@ -118,10 +95,9 @@ class `기둥과 보 설치` {
                 }
 
                 else if (b== 1){
-                    installFromGraph(graph, x, y, a)
                     graph[x][y][a] = true
 
-                    val result = checkIsValidForInstall(graph, x, y, a, n)
+                    val result = checkIsValid(graph, x, y, a, n)
 
                     if (!result) {
                         graph[x][y][a] = false

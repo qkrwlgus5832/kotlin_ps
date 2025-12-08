@@ -146,7 +146,9 @@ class `2차원 동전 뒤집기` {
 
             val func = listOf(
                 ::reverseFirstRowLine,
+                ::reverseLastRowLine,
                 ::reverseFirstColLine,
+                ::reverseLastColLine
             )
 
             for (fn in func) {

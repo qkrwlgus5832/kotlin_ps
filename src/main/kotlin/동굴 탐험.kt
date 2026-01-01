@@ -3,14 +3,13 @@ import java.util.*
 class `동굴 탐험` {
     class Solution {
         val check = HashMap<Pair<Int, Int>, Boolean>()
-        val edgeCheck = HashMap<Pair<Int, Int>, Boolean>()
 
         val depth = Array(200001) { 0 }
 
-        private fun getParentGraph(graph: Array<MutableList<Int>>, n: Int): Array<MutableList<Int>> {
+        private fun getParentGraph(graph: Array<MutableList<Int>>, n: Int): Array<MutableSet<Int>> {
             val start = 0
             val parentGraph = Array(n) {
-                mutableListOf<Int>()
+                mutableSetOf<Int>()
             }
 
             val queue = LinkedList<Int>()
@@ -24,9 +23,8 @@ class `동굴 탐험` {
 
                 for (next in graph[front]) {
                     if (check[next] == false) {
-                        parentGraph[next].add(front)
-                        edgeCheck[Pair(front, next)] = true
-                        depth[front]++
+                        parentGraph[front].add(next)
+                        depth[next]++
                         check[next] = true
                         queue.add(next)
                     }
@@ -36,7 +34,7 @@ class `동굴 탐험` {
             return parentGraph
         }
 
-        private fun topologicalSort(orderGraph: Array<MutableList<Int>>, n: Int): Boolean {
+        private fun topologicalSort(orderGraph: Array<MutableSet<Int>>, n: Int): Boolean {
             val queue = LinkedList<Int>()
 
             for (i in 0 until n) {
@@ -87,11 +85,10 @@ class `동굴 탐험` {
                 val before = order[i][0]
                 val after = order[i][1]
 
-                if (edgeCheck.containsKey(Pair(before, after))) {
-                    continue
+                if (!orderGraph[before].contains(after)) {
+                    orderGraph[before].add(after)
+                    depth[after]++
                 }
-                orderGraph[after].add(before)
-                depth[before]++
             }
 
 
@@ -112,12 +109,20 @@ class `동굴 탐험` {
 fun main() {
     val solution = `동굴 탐험`.Solution()
     solution.solution(
-        3, arrayOf(
+        9, arrayOf(
             intArrayOf(0, 1),
+            intArrayOf(0, 3),
+            intArrayOf(0, 7),
+            intArrayOf(8, 1),
+            intArrayOf(3, 6),
             intArrayOf(1, 2),
+            intArrayOf(4, 7),
+            intArrayOf(7, 5),
         ),
         arrayOf(
-            intArrayOf(1, 2)
+            intArrayOf(4, 1),
+            intArrayOf(8, 7),
+            intArrayOf(6, 5)
         )
     )
 }

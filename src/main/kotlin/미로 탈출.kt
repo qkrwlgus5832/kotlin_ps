@@ -11,7 +11,8 @@ class `미로 탈출` {
         data class Node(
             val current: Int,
             val trapCheck: Long,
-            val cost: Int
+            val cost: Int,
+            val list: MutableList<Int> = mutableListOf()
         )
 
         private fun Long.contains(x: Int): Boolean {
@@ -25,10 +26,10 @@ class `미로 탈출` {
         }
 
         private fun bfs(start: Int, end: Int, graph: Array<MutableList<Pair<Int, Int>>>, reverseGraph: Array<MutableList<Pair<Int, Int>>>): Int {
-            val queue = LinkedList<Node>()
+            val queue = PriorityQueue<Node>(compareBy { it.cost })
             val bfsCheck = Array<Array<Int>>(1001) { Array<Int>(2000) { -1 } }
 
-            val startNode = Node(start, 0, 0)
+            val startNode = Node(start, 0, 0, mutableListOf(start))
             queue.add(startNode)
             bfsCheck[startNode.current][startNode.trapCheck.toInt()] = 0
             var answer = Int.MAX_VALUE
@@ -40,8 +41,7 @@ class `미로 탈출` {
                     val front = queue.poll()
 
                     if (front.current == end) {
-                        answer = min(answer, front.cost)
-                        continue
+                        return front.cost
                     }
 
                     if (front.trapCheck.contains(front.current)) {
@@ -49,6 +49,7 @@ class `미로 탈출` {
                             val next = it.first
                             val nextCost = it.second
                             var nextTrapCheck = front.trapCheck
+                            val list = front.list.toMutableList()
 
                             if (!front.trapCheck.contains(next)) {
                                 return@forEach
@@ -58,7 +59,8 @@ class `미로 탈출` {
                                 nextTrapCheck = front.trapCheck.xor(next)
                             }
 
-                            val nextNode = Node(next, nextTrapCheck, front.cost + nextCost)
+                            list.add(next)
+                            val nextNode = Node(next, nextTrapCheck, front.cost + nextCost, list)
                             if (bfsCheck[next][nextTrapCheck.toInt()] == -1 || bfsCheck[next][nextTrapCheck.toInt()] > front.cost + nextCost) {
                                 bfsCheck[next][nextTrapCheck.toInt()] = front.cost + nextCost
                                 queue.add(nextNode)
@@ -68,6 +70,7 @@ class `미로 탈출` {
                             val next = it.first
                             val nextCost = it.second
                             var nextTrapCheck = front.trapCheck
+                            val list = front.list.toMutableList()
 
                             if (front.trapCheck.contains(next)) {
                                 return@forEach
@@ -77,7 +80,8 @@ class `미로 탈출` {
                                 nextTrapCheck = front.trapCheck.xor(next)
                             }
 
-                            val nextNode = Node(next, nextTrapCheck, front.cost + nextCost)
+                            list.add(next)
+                            val nextNode = Node(next, nextTrapCheck, front.cost + nextCost, list)
                             if (bfsCheck[next][nextTrapCheck.toInt()] == -1 || bfsCheck[next][nextTrapCheck.toInt()] > front.cost + nextCost) {
                                 bfsCheck[next][nextTrapCheck.toInt()] = front.cost + nextCost
                                 queue.add(nextNode)
@@ -88,6 +92,7 @@ class `미로 탈출` {
                             val next = it.first
                             val nextCost = it.second
                             var nextTrapCheck = front.trapCheck
+                            val list = front.list.toMutableList()
 
                             if (front.trapCheck.contains(next)) {
                                 return@forEach
@@ -97,7 +102,8 @@ class `미로 탈출` {
                                 nextTrapCheck = front.trapCheck.xor(next)
                             }
 
-                            val nextNode = Node(next, nextTrapCheck, front.cost + nextCost)
+                            list.add(next)
+                            val nextNode = Node(next, nextTrapCheck, front.cost + nextCost, list)
                             if (bfsCheck[next][nextTrapCheck.toInt()] == -1 || bfsCheck[next][nextTrapCheck.toInt()] > front.cost + nextCost) {
                                 bfsCheck[next][nextTrapCheck.toInt()] = front.cost + nextCost
                                 queue.add(nextNode)
@@ -108,7 +114,7 @@ class `미로 탈출` {
                             val next = it.first
                             val nextCost = it.second
                             var nextTrapCheck = front.trapCheck
-
+                            val list = front.list.toMutableList()
 
                             if (!front.trapCheck.contains(next)) {
                                 return@forEach
@@ -118,7 +124,8 @@ class `미로 탈출` {
                                 nextTrapCheck = front.trapCheck.xor(next)
                             }
 
-                            val nextNode = Node(next, nextTrapCheck, front.cost + nextCost)
+                            list.add(next)
+                            val nextNode = Node(next, nextTrapCheck, front.cost + nextCost, list)
                             if (bfsCheck[next][nextTrapCheck.toInt()] == -1 || bfsCheck[next][nextTrapCheck.toInt()] > front.cost + nextCost) {
                                 bfsCheck[next][nextTrapCheck.toInt()] = front.cost + nextCost
                                 queue.add(nextNode)
@@ -151,4 +158,19 @@ class `미로 탈출` {
             return bfs(start, end, graph, reverseGraph)
         }
     }
+}
+
+fun main() {
+    val solution = `미로 탈출`.Solution()
+    println(solution.solution(5, 1, 4,
+        arrayOf(
+            intArrayOf(1, 2, 1),
+            intArrayOf(2, 1, 1),
+            intArrayOf(3, 2, 5),
+            intArrayOf(3, 1, 1),
+            intArrayOf(4, 3, 50),
+            intArrayOf(3, 5, 1),
+            intArrayOf(5, 4, 1),
+        ), intArrayOf(2, 3)
+    ))
 }

@@ -91,7 +91,7 @@ class `외벽 점검` {
             val allTrapsOn = (1 shl weak.size) - 1
 
             if (weakBitMask == allTrapsOn) {
-                if (answer == -1 && distCount != 0) {
+                if (answer == -1) {
                     answer = distCount
                     return true
                 }

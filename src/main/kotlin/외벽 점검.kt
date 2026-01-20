@@ -48,7 +48,7 @@ class `외벽 점검` {
         private fun rightRotate(n: Int, weak: Int, dist: Int, weakCheck: IntArray, isPlus: Boolean = true, weakArray: IntArray, weakBitMask: Int): Int {
             var left = weak
             var right = weak + dist
-            var result = 0
+            var result = weakBitMask
 
             if (right >=n) {
                 right = right % n
@@ -86,7 +86,7 @@ class `외벽 점검` {
         }
 
         fun recursion(n: Int, weak: IntArray, dist: IntArray, distIndex: Int, weakIndex: Int, weakCheck: IntArray,
-                      distCheck: BooleanArray, distCount: Int, weakBitMask: Int, weaks: MutableList<Triple<Int, Int, Int>>): Boolean {
+                      distCheck: BooleanArray, distCount: Int, weakBitMask: Int): Boolean {
 
             val allTrapsOn = (1 shl weak.size) - 1
 
@@ -113,7 +113,6 @@ class `외벽 점검` {
                         if (weakCheck[j] == 0) {
                             var result = leftRotate(n, weak[j], dist[i], weakCheck, true, weak, weakBitMask)
 
-                            weaks.add(Triple(i, j, 1))
                             recursion(
                                 n,
                                 weak,
@@ -124,16 +123,12 @@ class `외벽 점검` {
                                 distCheck,
                                 distCount + 1,
                                 result,
-                                weaks
                             )
 
                             leftRotate(n, weak[j], dist[i], weakCheck, false, weak, weakBitMask)
 
                             result = rightRotate(n, weak[j], dist[i], weakCheck, true, weak, weakBitMask)
 
-                            weaks.removeLast()
-
-                            weaks.add(Triple(i, j, -1))
                             recursion(
                                 n,
                                 weak,
@@ -144,11 +139,8 @@ class `외벽 점검` {
                                 distCheck,
                                 distCount + 1,
                                 result,
-                                weaks
                             )
                             rightRotate(n, weak[j], dist[i], weakCheck, false, weak, weakBitMask)
-
-                            weaks.removeLast()
                         }
                     }
                     distCheck[i] = false
@@ -160,7 +152,7 @@ class `외벽 점검` {
 
         fun solution(n: Int, weak: IntArray, dist: IntArray): Int {
             val sorted = dist.sortedByDescending { it }
-            recursion(n, weak, sorted.toIntArray(), 0, 0, IntArray(n + 1) {0}, BooleanArray(9) {false}, 0, 0, mutableListOf())
+            recursion(n, weak, sorted.toIntArray(), 0, 0, IntArray(n + 1) {0}, BooleanArray(9) {false}, 0, 0)
 
             return answer
         }

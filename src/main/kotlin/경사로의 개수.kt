@@ -21,10 +21,8 @@ class `경사로의 개수` {
             for (i in 0 until matrixA.size) {
                 for (j in 0 until matrixA[0].size) {
                     for (i1 in 0 until matrixA[0].size) {
+                        if (matrixA[i][i1] == 0 || matrixB[i1][j] == 0) continue
                         newMatrix[i][j] = ((newMatrix[i][j] % REMAINDER) + (((matrixA[i][i1] % REMAINDER) * (matrixB[i1][j].toLong() % REMAINDER)) % REMAINDER).toInt()) % REMAINDER
-                        if (newMatrix[i][j] < 0) {
-                            println("dddd")
-                        }
                     }
                 }
             }

@@ -4,10 +4,18 @@ class `Minimum Window Substring` {
             val tSmallCaseCount = Array(26) { 0 }
             val tLargeCaseCount = Array(26) { 0 }
 
+            var requireCount = 0
+
             for (i in 0 until t.length) {
                 if (t[i] in 'A'..'Z') {
+                    if (tLargeCaseCount[t[i] - 'A'] == 0) {
+                        requireCount++
+                    }
                     tLargeCaseCount[t[i] - 'A']++
                 } else if (t[i] in 'a'..'z') {
+                    if (tSmallCaseCount[t[i] - 'a'] == 0) {
+                        requireCount++
+                    }
                     tSmallCaseCount[t[i] - 'a']++
                 }
             }
@@ -18,6 +26,7 @@ class `Minimum Window Substring` {
             var minPartition = Pair(-1, -1)
 
             val deque = ArrayDeque<Pair<Int, Char>>()
+
 
             for (i in 0 until s.length) {
                 var tCount: Array<Int>
@@ -39,6 +48,10 @@ class `Minimum Window Substring` {
                 if (tCount[s[i] - standard] > 0) {
                     deque.add(Pair(i, s[i]))
                     slidingWindowCount[s[i] - standard]++
+
+                    if (slidingWindowCount[s[i] -standard] == tCount[s[i] - standard]) {
+                        requireCount--
+                    }
 
                     while(true) {
                         val current = deque.first().second
@@ -62,16 +75,7 @@ class `Minimum Window Substring` {
                         }
                     }
 
-                    var flag = true
-
-                    for (i in 0 until 26) {
-                        if (tSmallCaseCount[i] > slidingWindowSmallCaseCount[i] || tLargeCaseCount[i] > slidingWindowLargeCaseCount[i]) {
-                            flag = false
-                            break
-                        }
-                    }
-
-                    if (flag) {
+                    if (requireCount == 0) {
                         if (minPartition.first == -1 && minPartition.second == -1) {
                             minPartition = Pair(deque.first().first, deque.last().first)
                         }

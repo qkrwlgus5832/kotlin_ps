@@ -6,13 +6,10 @@ class `Trapping Rain Water` {
         fun trap(height: IntArray): Int {
             var answer = 0
 
-            for (i in 0 until height.size) {
-                var maxLeft = -1
-                var maxRight = -1
+            var maxLeft = -1
 
-                for (j in i - 1 downTo 0) {
-                    maxLeft = max(maxLeft, height[j])
-                }
+            for (i in 0 until height.size) {
+                var maxRight = -1
 
                 for (j in i + 1 until height.size) {
                     if (height[j] >= maxLeft) {
@@ -24,12 +21,16 @@ class `Trapping Rain Water` {
                 }
 
                 if (maxLeft == -1 || maxRight == -1) {
+                    maxLeft = max(maxLeft, height[i])
                     continue
                 }
                 if (maxLeft < height[i] || maxRight < height[i]) {
+                    maxLeft = max(maxLeft, height[i])
                     continue
                 }
                 answer += min(maxLeft, maxRight) - height[i]
+                maxLeft = max(maxLeft, height[i])
+
             }
 
             return answer

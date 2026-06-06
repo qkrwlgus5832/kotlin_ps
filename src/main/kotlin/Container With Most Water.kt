@@ -1,0 +1,34 @@
+import kotlin.math.max
+import kotlin.math.min
+
+class `Container With Most Water` {
+    fun maxArea(height: IntArray): Int {
+        var left = 0
+        var right = height.size - 1
+
+        var maxSum = 0
+
+        while(true) {
+            if (left >= right) {
+                break
+            }
+
+            maxSum = max(maxSum, min(height[left], height[right]) * (right - left))
+
+            if (height[left] < height[right]) {
+                left++
+            }
+            else {
+                right--
+            }
+        }
+
+        return maxSum
+    }
+}
+
+
+fun main() {
+    val containerWithWater = `Container With Most Water`()
+    println(containerWithWater.maxArea(intArrayOf(159,157,139,51,98,71,4,125,48,125,64,4,105,79,136,169,113,13,95,88,190,5,148,17,152,20,196,141,35,42,188,147,199,127,198,49,150,154,175,199,80,191,3,137,22,92,58,87,57,153,175,199,110,75,16,62,96,12,3,83,55,144,30,6,23,28,56,174,183,183,173,15,126,128,104,148,172,163,35,181,68,162,181,179,37,197,193,85,10,197,169,17,141,199,175,164,180,183,90,115)))
+}
